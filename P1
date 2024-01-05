@@ -1,1 +1,48 @@
+8:k nearest
 
+import csv
+import numpy
+from sklearn.neighbors import KNeighborsClassifier
+with open('knntrain.csv') as csv_file:
+csv_reader = csv.reader(csv_file, delimiter=',')
+data=numpy.array([r for r in csv_reader])
+x=numpy.array([r[:-1] for r in data])
+y=numpy.array([r[-1] for r in data])
+knn=KNeighborsClassifier(n_neighbors=3).fit(x,y)
+print('Accuracy:',knn.score(x,y),'\n')
+correct=wrong=False
+for i in range(len(x)):
+p=knn.predict([x[i]])
+if p[0]==y[i] and correct==False:
+correct=True
+print('Data:',x[i])
+print('Class:',y[i])
+print('Output:',p[0])
+print('Correct\n')
+elif p[0]!=y[i] and wrong==False:
+wrong=True
+print('Data:',x[i])
+print('Class:',y[i])
+print('Output:',p[0])
+print('Wrong\n')
+
+
+
+
+
+knntrain.csv
+5.1,3.5,1.4,0.2,setosa
+4.9,3.0,1.4,0.2,setosa
+4.7,3.2,1.3,0.2,setosa
+4.6,3.1,1.5,0.2,setosa
+5.0,3.6,1.4,0.2,setosa
+5.4,3.9,1.7,0.4,setosa
+4.6,3.4,1.4,0.3,setosa
+5.0,3.4,1.5,0.2,setosa
+4.4,2.9,1.4,0.2,setosa
+4.9,3.1,1.5,0.1,setosa
+5.4,3.7,1.5,0.2,setosa
+4.8,3.4,1.6,0.2,setosa
+4.8,3.0,1.4,0.1,setosa
+4.3,3.0,1.1,0.1,setosa
+5.8,4.0,1.2,0.

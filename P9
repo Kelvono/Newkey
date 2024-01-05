@@ -1,0 +1,62 @@
+
+import matplotlib.pyplot as plt
+
+import numpy as np
+
+import statsmodels.api as sm
+
+import math
+
+n=100
+
+x = np.linspace(0, 2 * math.pi, n)# This is used to find random linear values of xx
+
+y = np.sin(x) + 0.3*np.random.randn(n) # This is delibrate noisy value inserted for the
+
+prediction
+
+# lowess will return our "smoothed" data with a y value for at every x-value
+
+lowess = sm.nonparametric.lowess(y, x, frac=.3)
+
+# unpack the lowess smoothed points to their values
+
+lowess_x = list(zip(*lowess))[0]
+
+lowess_y = list(zip(*lowess))[1]
+
+plt.clf()
+
+plt.plot(x, y, label='y noisy')
+
+plt.plot(lowess_x, lowess_y, label='y pred')
+
+plt.legend()
+
+plt.show()
+
+print("X :", x)
+
+print("Y " ,y)
+
+bptrain.csv
+
+2.7810836,2.550537003,0
+
+1.465489372,2.362125076,0
+
+3.396561688,4.400293529,0
+
+1.38807019,1.850220317,0
+
+3.06407232,3.005305973,0
+
+7.627531214,2.759262235,1
+
+5.332441248,2.088626775,1
+
+6.922596716,1.77106367,1
+
+8.675418651,-0.242068655,1
+
+7.673756466,3.508563011,1

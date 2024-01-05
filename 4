@@ -1,0 +1,105 @@
+import csv
+from math import log2
+
+class DT:
+    def __init__(self, l, v, c, e):
+        self.leaf = l
+        self.value = v
+        self.children = c
+        self.edge = e
+
+def entropyClass(data):
+    s = dict()
+    for i in data:
+        s[i[-1]] = s.get(i[-1], 0) + 1
+    e = 0
+    for i in s:
+        if s[i] != 0:
+            e -= ((s[i] / len(data)) * log2(s[i] / len(data)))
+    return e
+
+def entropy(data, i):
+    s = dict()
+    for d in data:
+        if s.get(d[i], 0) == 0:
+            s[d[i]] = dict()
+        s[d[i]][d[-1]] = s[d[i]].get(d[-1], 0) + 1
+    e = 0
+    for d in s:
+        e1 = t = 0
+        for i in s[d]:
+            t += s[d][i]
+        for i in s[d]:
+            e1 -= ((s[d][i] / t) * log2(s[d][i] / t))
+        e += ((t / len(data)) * e1)
+    return e
+
+def createDT(data, s, v, edge_values=None):
+    global anames
+    x = set()
+    for i in data:
+        x.add(i[-1])
+    if len(x) == 1:
+        return DT(1, data[0][-1], [], [])
+    me = 10 ** 20
+    e = entropyClass(data)
+    for i in range(len(v)):
+        if v[i] == 0:
+            x = entropy(data, i)
+            if x < me:
+                me = x
+                j = i
+    e = []
+    c = []
+    v[j] = 1
+    if edge_values is None:
+        edge_values = set()
+        for d in data:
+            edge_values.add(d[j])
+    for i in edge_values:
+        data1 = []
+        for d in data:
+            if d[j] == i:
+                data1.append(d)
+        if len(data1) > 0:
+            e.append(i)
+            c.append(createDT(data1, s, v.copy()))
+
+    return DT(0, anames[j], c, e)
+
+
+def classify(dt, data):
+    global anames
+    c = dt
+    while c.leaf != 1:
+        i = anames.index(c.value)
+        j = c.edge.index(data[i])
+        c = c.children[j]
+    return c.value
+
+with open('input.csv') as csv_file:
+    print('Training Data:')
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    data = list()
+    rc = 0
+    for row in csv_reader:
+        if rc == 0:
+            anames = row
+            rc += 1
+        else:
+            data.append(row)
+            print(row)
+    print()
+
+# Initialize the 's' list to store unique values for each attribute
+s = [set() for _ in range(len(data[0]) - 1)]
+
+# Build the Decision Tree
+root = createDT(data, s, [0] * (len(data[0]) - 1))
+
+# Example: Classify a new sample
+new_sample = ['sunny', 'cool', 'high', 'strong']
+
+print("\nSample Data:", new_sample)
+prediction = classify(root, new_sample)
+print("Classification:", prediction)

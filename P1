@@ -1,31 +1,29 @@
 8:k nearest
-
 import csv
 import numpy
 from sklearn.neighbors import KNeighborsClassifier
 with open('knntrain.csv') as csv_file:
-csv_reader = csv.reader(csv_file, delimiter=',')
-data=numpy.array([r for r in csv_reader])
-x=numpy.array([r[:-1] for r in data])
-y=numpy.array([r[-1] for r in data])
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    data=numpy.array([r for r in csv_reader])
+    x=numpy.array([r[:-1] for r in data])
+    y=numpy.array([r[-1] for r in data])
 knn=KNeighborsClassifier(n_neighbors=3).fit(x,y)
 print('Accuracy:',knn.score(x,y),'\n')
 correct=wrong=False
 for i in range(len(x)):
-p=knn.predict([x[i]])
-if p[0]==y[i] and correct==False:
-correct=True
-print('Data:',x[i])
-print('Class:',y[i])
-print('Output:',p[0])
-print('Correct\n')
-elif p[0]!=y[i] and wrong==False:
-wrong=True
-print('Data:',x[i])
-print('Class:',y[i])
-print('Output:',p[0])
-print('Wrong\n')
-
+    p=knn.predict([x[i]])
+    if p[0]==y[i] and correct==False:
+        correct=True
+        print('Data:',x[i])
+        print('Class:',y[i])
+        print('Output:',p[0])
+        print('Correct\n')
+    elif p[0]!=y[i] and wrong==False:
+        wrong=True
+        print('Data:',x[i])
+        print('Class:',y[i])
+        print('Output:',p[0])
+        print('Wrong\n')
 
 
 

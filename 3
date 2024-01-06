@@ -1,44 +1,44 @@
 import csv
 def match(d,h):
-  for i in range(len(h)):
-   if not(h[i]=='?' or h[i]==d[i]):
-      return False
-   return True
+    for i in range(len(h)):
+        if not(h[i]=='?' or h[i]==d[i]):
+            return False
+    return True
 def specialise(d,g,s):
-     g1=['?']*(len(d)-1)
-     g=[]
-     for i in range(len(d)-1):
-      if s[i]!='?' and s[i]!=d[i]:
-         g1[i]=s[i]
-         g.append(g1.copy())
-         g1[i]='?'
-      return g
+    g1=['?']*(len(d)-1)
+    g=[]
+    for i in range(len(d)-1):
+        if s[i]!='?' and s[i]!=d[i]:
+            g1[i]=s[i]
+            g.append(g1.copy())
+            g1[i]='?'
+            return g
 def generalise(d,s):
     for i in range(len(s)):
-           if s[i]=='%':
-              s[i]=d[i]
-           elif s[i]!='?' and s[i]!=d[i]:
-                s[i]='?'
-     return s
+        if s[i]=='%':
+            s[i]=d[i]
+        elif s[i]!='?'and s[i]!=d[i]:
+                 s[i]='?'
+        return s
 with open('cetrain.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     data=[]
     for row in csv_reader:
-       data.append(row)
-s=['%']*(len(data[0])-1)
-g=list()
-g.append(['?']*(len(data[0])-1))
-print("S: ",s,"\nG: ",g,"\n")
-for d in data:
-    print("Data:",d)
-    if d[-1]=='yes':
-       s=generalise(d,s)
-       g1=[]
-       for h in g:
-         if match(d,h):
-           g1.append(h)
-        g=g1
-     else:
-          g=specialise(d,g,s)
-      print("S: ",s,"\nG: ",g,"\n")
+        data.append(row)
+    s=['%']*(len(data[0])-1)
+    g=list()
+    g.append(['?']*(len(data[0])-1))
+    print("S: ",s,"\nG: ",g,"\n")
+    for d in data:
+        print("Data:",d)
+        if d[-1]=='yes':
+            s=generalise(d,s)
+            g1=[]
+            for h in g:
+                if match(d,h):
+                    g1.append(h)
+            g=g1 
+        else:
+             g=specialise(d,g,s)
+        print("S: ",s,"\nG: ",g,"\n")
 print("S: ",s,"\nG: ",g,"\n")
